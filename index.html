@@ -3,404 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SM产品体系</title>
-    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <style>
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+    <title>一人市场部服务选购平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#7c3aed',
+                        accent: '#f97316',
+                        neutral: '#1f2937',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            }
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .hover-scale {
-            transition: all 0.3s ease;
-        }
-        .hover-scale:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(30, 41, 59, 0.15);
-        }
-        .chart-container {
-            height: 300px;
-            width: 100%;
-        }
-        .bg-gradient-blue {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        }
-        .text-gradient-blue {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .service-card {
+                @apply bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg cursor-pointer border border-gray-100;
+            }
+            .service-card-selected {
+                @apply border-primary bg-blue-50;
+            }
+            .nav-link {
+                @apply px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200;
+            }
+            .nav-link-active {
+                @apply bg-primary/10 text-primary;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-gray-50 text-neutral font-sans">
+    <!-- 头部区域 -->
+    <header class="bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="container mx-auto px-4 py-8 text-center">
+            <h1 class="text-[clamp(1.8rem,5vw,2.8rem)] font-bold mb-3">一人市场部服务选购平台</h1>
+            <p class="text-[clamp(1rem,2vw,1.2rem)] max-w-2xl mx-auto opacity-90">
+                选择适合您企业的市场服务，我们提供从市场调研到品牌推广的一站式解决方案，按需选购，灵活组合
+            </p>
+        </div>
+    </header>
+
     <!-- 导航栏 -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-gradient-blue">
-                <i class="fas fa-cubes mr-2"></i>SM产品体系
+    <nav class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto no-scrollbar py-3 gap-1">
+                <button class="nav-link nav-link-active" data-category="all">全部服务</button>
+                <button class="nav-link" data-category="market-research">市场调研</button>
+                <button class="nav-link" data-category="strategy">策略制定</button>
+                <button class="nav-link" data-category="branding">品牌推广</button>
+                <button class="nav-link" data-category="activities">活动执行</button>
+                <button class="nav-link" data-category="crm">客户关系</button>
+                <div class="relative group">
+                    <button class="nav-link" data-category="collaboration">跨部门协作</button>
+                    <div class="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20">
+                        <button class="nav-link w-full text-left" data-category="collaboration_sales">销售协作</button>
+                        <button class="nav-link w-full text-left" data-category="collaboration_hr">人事协作</button>
+                        <button class="nav-link w-full text-left" data-category="collaboration_rnd">研发协作</button>
+                        <button class="nav-link w-full text-left" data-category="collaboration_plan">计划协作</button>
+                        <button class="nav-link w-full text-left" data-category="collaboration_admin">行政协作</button>
+                    </div>
+                </div>
             </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#results" class="text-slate-600 hover:text-blue-600 transition-colors">核心成果</a>
-                <a href="#services" class="text-slate-600 hover:text-blue-600 transition-colors">服务矩阵</a>
-                <a href="#tools" class="text-slate-600 hover:text-blue-600 transition-colors">工具产品</a>
-                <a href="#knowledge" class="text-slate-600 hover:text-blue-600 transition-colors">知识产品</a>
-                <a href="#training" class="text-slate-600 hover:text-blue-600 transition-colors">培训服务</a>
-            </div>
-            <button class="md:hidden text-slate-600">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
         </div>
     </nav>
 
-    <!-- 主要内容 -->
+    <!-- 主内容区域 -->
     <main class="container mx-auto px-4 py-8">
-        <!-- 核心成果展示 -->
-        <section id="results" class="mb-16">
-            <div class="flex items-center mb-8">
-                <div class="w-12 h-12 rounded-full bg-gradient-blue flex items-center justify-center text-white mr-4">
-                    <i class="fas fa-trophy"></i>
-                </div>
-                <h2 class="text-3xl font-bold text-slate-800">核心成果展示</h2>
+        <!-- 服务列表 -->
+        <div id="service-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
+            <!-- 服务项将通过JavaScript动态生成 -->
+            <div class="col-span-full text-center py-10">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+                <p class="text-gray-500">加载服务项目中...</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div class="glass-card p-6 hover-scale">
-                    <h3 class="text-xl font-semibold mb-4 text-blue-600">爆款案例墙</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <i class="fas fa-file-alt text-blue-500 text-2xl mb-2"></i>
-                            <p class="text-sm font-medium">文章案例</p>
-                            <p class="text-xs text-slate-500">阅读量10w+</p>
-                        </div>
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <i class="fas fa-video text-blue-500 text-2xl mb-2"></i>
-                            <p class="text-sm font-medium">视频案例</p>
-                            <p class="text-xs text-slate-500">播放量50w+</p>
-                        </div>
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <i class="fas fa-user-tie text-blue-500 text-2xl mb-2"></i>
-                            <p class="text-sm font-medium">IP打造</p>
-                            <p class="text-xs text-slate-500">粉丝增长300%</p>
-                        </div>
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <i class="fas fa-chart-line text-blue-500 text-2xl mb-2"></i>
-                            <p class="text-sm font-medium">数据增长</p>
-                            <p class="text-xs text-slate-500">ROI提升5倍</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="glass-card p-6 hover-scale">
-                    <h3 class="text-xl font-semibold mb-4 text-blue-600">客户增长对比图</h3>
-                    <div class="chart-container">
-                        <canvas id="growthChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
 
-        <!-- 服务矩阵 -->
-        <section id="services" class="mb-16">
-            <div class="flex items-center mb-8">
-                <div class="w-12 h-12 rounded-full bg-gradient-blue flex items-center justify-center text-white mr-4">
-                    <i class="fas fa-server"></i>
+        <!-- 订单摘要 -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 sticky bottom-4 z-10 max-w-4xl mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <p class="text-gray-500"><span id="selected-count">0</span> 项服务已选择</p>
+                    <p class="text-2xl font-bold text-primary mt-1">总计: <span id="total-price">¥0</span></p>
                 </div>
-                <h2 class="text-3xl font-bold text-slate-800">服务矩阵</h2>
+                <button id="generate-order" class="bg-secondary hover:bg-secondary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    <i class="fa fa-file-text-o"></i> 生成订单
+                </button>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass-card p-6 hover-scale">
-                    <div class="flex items-start mb-4">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-                            <i class="fas fa-cloud"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold">市场托管运营</h3>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h4 class="font-medium text-blue-600 mb-2">月度服务包内容</h4>
-                        <ul class="text-sm text-slate-600 space-y-2">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mr-2 mt-1"></i>
-                                <span>每周3篇高质量内容创作</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mr-2 mt-1"></i>
-                                <span>全平台账号运营管理</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mr-2 mt-1"></i>
-                                <span>数据监测与优化建议</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="bg-blue-50 rounded-lg p-4">
-                        <p class="text-sm font-medium text-blue-800">
-                            <i class="fas fa-star text-yellow-500 mr-1"></i>
-                            成功案例：XX公司3个月增长500%
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="glass-card p-6 hover-scale">
-                    <div class="flex items-start mb-4">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-                            <i class="fas fa-project-diagram"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold">推广项目策划</h3>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h4 class="font-medium text-blue-600 mb-2">服务流程</h4>
-                        <div class="flex items-center mb-3">
-                            <div class="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs mr-2">1</div>
-                            <span class="text-sm font-medium">需求诊断</span>
-                        </div>
-                        <div class="flex items-center mb-3">
-                            <div class="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs mr-2">2</div>
-                            <span class="text-sm font-medium">方案设计</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs mr-2">3</div>
-                            <span class="text-sm font-medium">执行优化</span>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h4 class="font-medium text-blue-600 mb-2">定价模式</h4>
-                        <p class="text-sm text-slate-600">按项目复杂度阶梯定价，基础方案¥9,800起</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 工具产品 -->
-        <section id="tools" class="mb-16">
-            <div class="flex items-center mb-8">
-                <div class="w-12 h-12 rounded-full bg-gradient-blue flex items-center justify-center text-white mr-4">
-                    <i class="fas fa-tools"></i>
-                </div>
-                <h2 class="text-3xl font-bold text-slate-800">工具产品</h2>
-            </div>
-            
-            <div class="glass-card p-6 overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-blue-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">工具名称</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">核心功能</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">适用场景</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">定价模式</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr class="hover:bg-blue-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">爆款内容生成器</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">AI自动生成高传播文案</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">自媒体日常更新</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">月付/终身版</td>
-                        </tr>
-                        <tr class="hover:bg-blue-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">流量拆解工具</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">竞品流量渠道分析</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">市场调研阶段</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">按次付费</td>
-                        </tr>
-                        <tr class="hover:bg-blue-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">自动化发布助手</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">多平台内容同步</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">内容运营</td>
-                            <td class="px-6 py-4 text-sm text-slate-600">免费基础版+增值功能</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- 知识产品 -->
-        <section id="knowledge" class="mb-16">
-            <div class="flex items-center mb-8">
-                <div class="w-12 h-12 rounded-full bg-gradient-blue flex items-center justify-center text-white mr-4">
-                    <i class="fas fa-book"></i>
-                </div>
-                <h2 class="text-3xl font-bold text-slate-800">知识产品</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-card p-6 hover-scale">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl mb-4">
-                        <i class="fas fa-file-pdf"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">《一人市场部操作手册》</h3>
-                    <p class="text-sm text-slate-600 mb-4">全面系统的市场运营指南，包含12大模块，200+实用技巧</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">PDF电子书</span>
-                        <span class="text-sm font-medium text-blue-600">¥199</span>
-                    </div>
-                </div>
-                
-                <div class="glass-card p-6 hover-scale">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl mb-4">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">行业案例库</h3>
-                    <p class="text-sm text-slate-600 mb-4">每周更新的实战案例库，涵盖20+行业，100+成功案例</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">订阅制</span>
-                        <span class="text-sm font-medium text-blue-600">¥99/月</span>
-                    </div>
-                </div>
-                
-                <div class="glass-card p-6 hover-scale">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl mb-4">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">方法论视频课程</h3>
-                    <p class="text-sm text-slate-600 mb-4">12节系统课程，从理论到实践，掌握SM方法论精髓</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">视频课程</span>
-                        <span class="text-sm font-medium text-blue-600">¥599</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 培训服务 -->
-        <section id="training" class="mb-16">
-            <div class="flex items-center mb-8">
-                <div class="w-12 h-12 rounded-full bg-gradient-blue flex items-center justify-center text-white mr-4">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                </div>
-                <h2 class="text-3xl font-bold text-slate-800">培训服务</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-card p-6 hover-scale">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl mb-4">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">3天线下工作坊</h3>
-                    <p class="text-sm text-slate-600 mb-4">小班制教学，深度互动，快速掌握SM方法核心</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">小班制</span>
-                        <span class="text-sm font-medium text-blue-600">¥3,999</span>
-                    </div>
-                </div>
-                
-                <div class="glass-card p-6 hover-scale">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl mb-4">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">1对1私教陪跑</h3>
-                    <p class="text-sm text-slate-600 mb-4">3个月周期，个性化指导，解决实际问题</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">定制化</span>
-                        <span class="text-sm font-medium text-blue-600">¥9,999</span>
-                    </div>
-                </div>
-                
-                <div class="glass-card p-6 hover-scale">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl mb-4">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">企业内训定制方案</h3>
-                    <p class="text-sm text-slate-600 mb-4">根据企业需求定制培训内容，提升团队整体能力</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">定制方案</span>
-                        <span class="text-sm font-medium text-blue-600">联系报价</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- 底部CTA -->
-    <footer class="bg-slate-900 text-white py-12">
+    <!-- 页脚 -->
+    <footer class="bg-neutral text-white py-8">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold mb-4">立即体验SM产品体系</h2>
-                <p class="text-slate-300 mb-6 max-w-2xl mx-auto">无论您是个人创业者还是企业团队，我们都能为您提供最适合的市场解决方案</p>
-                <div class="flex justify-center space-x-4">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
-                        <i class="fas fa-calendar-check mr-2"></i>预约演示
-                    </button>
-                    <button class="bg-white hover:bg-slate-100 text-blue-600 font-medium py-3 px-6 rounded-lg transition-colors">
-                        <i class="fas fa-rocket mr-2"></i>免费试用
-                    </button>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <p class="mb-2">本报价仅供参考，如有疑问，请联系市场部张经理</p>
+                    <p>电话: 153-4461-3446 | 邮箱: Mktools@163.com | 网址: http://oaim.ltd/ </p>
                 </div>
-            </div>
-            
-            <div class="border-t border-slate-700 pt-8 text-center text-sm text-slate-400">
-                <p>© 2024 SM产品体系. 保留所有权利.</p>
-                <p class="mt-2">页面内容均由 AI 生成，仅供参考</p>
-                <p class="mt-2">created by <a href="https://space.coze.cn" class="text-blue-400 hover:text-blue-300">coze space</a></p>
+                <div class="text-center md:text-right">
+                    <p>© 2025 一人市场部. 保留所有权利</p>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- 订单生成模态框 -->
+    <div id="order-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-neutral">订单详情</h3>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-600"><i class="fa fa-times"></i></button>
+            </div>
+            <div id="order-details" class="mb-6">
+                <!-- 订单详情将通过JavaScript动态生成 -->
+            </div>
+            <div class="flex justify-end gap-3">
+                <button id="download-order" class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg font-medium transition-colors duration-200">
+                    <i class="fa fa-download"></i> 下载订单
+                </button>
+                <button id="confirm-order" class="bg-secondary hover:bg-secondary/90 text-white px-5 py-2 rounded-lg font-medium transition-colors duration-200">
+                    确认提交
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 客户增长图表
-            const growthCtx = document.getElementById('growthChart').getContext('2d');
-            new Chart(growthCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['使用前', '使用3个月后'],
-                    datasets: [{
-                        label: '客户增长对比',
-                        data: [100, 500],
-                        backgroundColor: [
-                            'rgba(59, 130, 246, 0.7)',
-                            'rgba(29, 78, 216, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(59, 130, 246, 1)',
-                            'rgba(29, 78, 216, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: '#94a3b8'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#94a3b8'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
+        // 服务数据 - 完全按照原始表格内容创建
+        const services = [
+            // 市场调研与分析 - 严格按照原始表格内容创建
+            { id: 1, name: '新产品、项目可行性评估报告', category: 'market-research', price: 2000, description: '包含市场规模分析（近3年数据）、竞品对比（3-5家）、风险评估（政策/技术风险）、机会点总结（5条）。1份PDF报告（30页）+Excel数据附件（含计算公式），15个工作日交付。一级项目基础价2000元，难度增加可上浮20%' },
+            { id: 2, name: '商业计划书', category: 'market-research', price: 2000, description: '执行摘要（2页）、市场分析（8页）、运营计划（10页）、财务预测（5年）、融资需求说明。1份Word文档（可编辑）+PPT演示版（15页），20个工作日交付。一级项目基础价2000元，需融资模型可另加1000元' },
+            { id: 3, name: '品牌诊断报告', category: 'market-research', price: 2000, description: '品牌现状分析、竞品对标、问题清单（Top10）、改进建议（含优先级）。1份PDF报告（25页）+诊断会议纪要（1份），10个工作日交付。一级项目基础价2000元，含1次现场汇报' },
+            { id: 4, name: '销售业绩分析', category: 'market-research', price: 2000, description: '近12个月销售数据、环比/同比分析、区域分布、产品线占比。1份Excel数据表+PDF报告（15页），5个工作日交付。一级项目基础价2000元，需历史数据另加500元' },
+            { id: 5, name: '品牌定位策划书', category: 'market-research', price: 5000, description: '目标人群定位、差异化优势、价格策略、竞品规避方案。1份策划书（20页）+定位图谱，10个工作日交付。一级项目基础价5000元，用户测试另加1000元' },
+            { id: 6, name: '产品定位策划', category: 'market-research', price: 5000, description: '目标人群定位、差异化优势、价格策略、竞品规避方案。1份策划书（20页）+定位图谱，10个工作日交付。一级项目基础价5000元，需用户测试另加1000元' },
+            { id: 7, name: '目标客户分析报告', category: 'market-research', price: 5000, description: '用户画像（年龄/地域/消费习惯）、痛点分级（核心/次要）、需求优先级排序（5级量表）。1份AI格式图谱+调研报告（20页），样本量≥500，12个工作日交付。一级项目基础价5000元，深度访谈另加500元/人' },
+            { id: 8, name: '客户真正需求分析报告', category: 'market-research', price: 5000, description: '需求挖掘方法说明、用户访谈记录（脱敏）、需求频次统计、需求满足方案。1份分析报告（25页）+原始数据摘要，15个工作日交付。一级项目基础价5000元，样本量超500另加费' },
+            { id: 9, name: '产品规划分析报告', category: 'market-research', price: 5000, description: '产品功能规划、迭代路线图、资源需求评估、市场前景预测。1份规划书（30页）+原型图，20个工作日交付。一级项目基础价5000元，需技术评估另加1000元' },
+            { id: 10, name: '产品外观设计方案', category: 'market-research', price: 5000, description: '3套设计草图、2套3D渲染图、材料说明、工艺要求。1份设计方案（PDF）+源文件（AI/PSD），15个工作日交付。二级项目基础价5000元，多方案每加1套加300元' },
+            { id: 11, name: '竞品调查表', category: 'market-research', price: 5000, description: '3-5家竞品的价格、销量、评价、推广活动周度监测。1份Excel监测表+周报（52期/年），每周一交付。一级项目基础价5000元/年，加竞品另加500元/家' },
+
+            // 市场策略制定 - 严格按照原始表格内容创建
+            { id: 12, name: '年度市场推广方案', category: 'strategy', price: 5000, description: '总目标→季度目标→月度KPI（如营收30%增长→线索40%增长）、渠道分配、资源需求清单。1份Excel拆解表+甘特图（Project格式），7个工作日交付。一级项目基础价5000元，含季度调整1次' },
+            { id: 13, name: '市场执行方案', category: 'strategy', price: 5000, description: '渠道策略、内容排期、预算分配、效果监测指标。1份执行手册（30页）+周度计划表，5个工作日交付。一级项目基础价5000元，含1次优化调整' },
+            { id: 14, name: '设计品牌内容', category: 'strategy', price: 20000, description: '品牌故事、核心价值主张、Slogan、品牌话术体系。1份内容手册（20页）+5套文案模板，10个工作日交付。二级项目基础价20000元，新增主题按200元/个计费' },
+            { id: 15, name: '市场内容', category: 'strategy', price: 12000, description: '产品介绍、活动宣传、用户案例等文案撰写，适配不同渠道（公众号/短视频/社群）。8篇/月（含排版），Word/Markdown格式，每周2篇交付。二级项目基础价12000元/篇，配图另加100元/张' },
+            { id: 16, name: '设计客户漏斗', category: 'strategy', price: 12000, description: '引流→转化→复购全流程设计、关键节点话术、数据分析模板。1份漏斗设计图+Excel跟踪表，5个工作日交付。二级项目基础价12000元，需系统对接另加2000元' },
+            { id: 17, name: '品牌IP策划方案', category: 'strategy', price: 10000, description: 'IP人设定位、内容矩阵规划、运营节奏、商业化路径。1份策划案（25页）+内容日历，15个工作日交付。一级项目基础价10000元，IP形象设计另加1500元' },
+            { id: 18, name: '老板个人IP策划方案', category: 'strategy', price: 10000, description: '人设打造、内容选题、平台运营、曝光策略。1份执行方案+月度选题表，10个工作日交付。一级项目基础价10000元，不含拍摄制作费用' },
+            { id: 19, name: '数字化营销', category: 'strategy', price: 10000, description: '独立站搭建、SEO优化、GEO定位推广的整合方案。1份执行方案（30页）+效果监测表，30个工作日交付。一级项目基础价10000元，不含平台服务费' },
+            { id: 20, name: '独立站搭建', category: 'strategy', price: 5000, description: '响应式设计（PC/移动端）、产品展示页、支付接口对接、后台管理系统。1个网站（含域名+服务器1年）+操作手册，30个工作日交付。二级项目基础价5000元，功能定制另议' },
+            { id: 21, name: 'SEO优化', category: 'strategy', price: 8000, description: '关键词研究（50个）、页面元标签优化、外链建设（每月20条）。1份优化方案+月度报告，30个工作日交付。二级项目基础价8000元/月，关键词排名提升另计' },
+            { id: 22, name: 'GEO定位推广', category: 'strategy', price: 10000, description: '基于LBS的精准广告投放、区域化内容定制、本地媒体合作。1份投放方案+周数据报告，15个工作日交付。二级项目基础价10000元/区域，增加区域另加300元' },
+            { id: 23, name: '搭建推广矩阵方案', category: 'strategy', price: 10000, description: '企业官网、公众号、视频号的矩阵搭建及联动策略。1份矩阵规划图+运营指南，10个工作日交付。一级项目基础价10000元，不含账号注册费用' },
+            { id: 24, name: '企业官网', category: 'strategy', price: 20000, description: '品牌展示型网站，含首页、关于我们、产品中心、联系方式等栏目。1套网站源码+后台管理系统，20个工作日交付。二级项目基础价20000元，域名服务器另算' },
+            { id: 25, name: '公众号运营', category: 'strategy', price: 15000, description: '内容发布（每周3篇）、粉丝互动、菜单设置、数据分析。1份月度运营报告+图文素材包，30个工作日交付。二级项目基础价15000元/月，不含推广费用' },
+            { id: 26, name: '视频号运营', category: 'strategy', price: 15000, description: '短视频发布（每周2条）、直播策划（每月1场）、评论回复。1份运营计划+视频素材，30个工作日交付。二级项目基础价15000元/月，不含直播设备' },
+            { id: 27, name: '媒体矩阵方案', category: 'strategy', price: 8000, description: '行业媒体、大众媒体的资源整合及投放策略。1份媒体清单+投放排期，15个工作日交付。一级项目基础价8000元，媒体费用另计' },
+            { id: 28, name: '行业媒体合作', category: 'strategy', price: 2000, description: '垂直领域媒体软文发布、专访安排、行业报告露出。1份合作方案+媒体报道链接，10个工作日交付。二级项目基础价2000元/篇，媒体级别不同价格另议' },
+            { id: 29, name: '大众媒体合作', category: 'strategy', price: 2000, description: '地方报纸、电视台、门户网站的广告投放及新闻报道。1份投放方案+效果监测报告，20个工作日交付。二级项目基础价2000元/次，媒体不同价格另议' },
+            { id: 30, name: '制定内容规划', category: 'strategy', price: 3000, description: '短视频、长视频、文章的内容选题、制作排期、分发策略。1份年度内容日历+季度选题表，10个工作日交付。一级项目基础价3000元，不含制作费用' },
+            { id: 31, name: '短视频内容', category: 'strategy', price: 3000, description: '15秒/30秒剧情类/产品类短视频，含脚本、拍摄、剪辑。4条/月，MP4格式，每周1条交付。二级项目基础价3000元/条，演员另加1000元/人' },
+            { id: 32, name: '长视频内容', category: 'strategy', price: 5000, description: '3-5分钟产品评测/访谈类视频，含策划、拍摄、后期。2条/月，MP4格式，每两周1条交付。二级项目基础价5000元/条，场地另加500元/次' },
+            { id: 33, name: '文章内容', category: 'strategy', price: 10000, description: '深度图文、行业分析、用户案例等，适配公众号/官网/媒体平台。8篇/月，Word/Markdown格式，每周2篇交付。二级项目基础价10000元/篇，配图另加100元/张' },
+            { id: 34, name: '预算方案表', category: 'strategy', price: 10000, description: '费用类别、金额、占比、ROI测算依据、应急储备（20%）。1份Excel预算表（含公式）+说明文档，3个工作日交付。一级项目基础价10000元，需多版本对比另加500元' },
+
+            // 品牌与内容推广 - 严格按照原始表格内容创建
+            { id: 35, name: '品牌基础物料包', category: 'branding', price: 10000, description: '品牌定位、视觉规范、内容策略、推广计划的年度规划。1份方案书（50页）+季度执行计划，30个工作日交付。一级项目基础价10000元，含2次方案优化' },
+            { id: 36, name: '品牌VI规范', category: 'branding', price: 5000, description: 'Logo使用规范、字体规范、色值规范、版式模板、禁用规则。1套VI手册（PDF50页）+源文件（AI格式），20个工作日交付。一级项目基础价5000元，新增物料按500元/项计费' },
+            { id: 37, name: '宣传片制作', category: 'branding', price: 10000, description: '3分钟品牌故事片、1分钟产品功能片、30秒广告片，含脚本撰写、拍摄、剪辑、配音。3个视频文件（MP4格式）+原始素材，45个工作日交付。二级项目基础价10000元/分钟，拍摄场地另算' },
+            { id: 38, name: '企业形象展厅设计', category: 'branding', price: 10000, description: '展厅布局规划、视觉设计、物料制作、施工监理。1套设计方案+施工图纸，30个工作日交付。二级项目基础价10000元/㎡，面积不同价格另议' },
+            { id: 39, name: '品牌周边方案设计', category: 'branding', price: 3000, description: '请柬、贺卡、公仔、其他文创产品的设计及打样。1份设计方案+样品（3件），20个工作日交付。一级项目基础价3000元，生产费用另计' },
+            { id: 40, name: '年度品牌运营方案', category: 'branding', price: 10000, description: '品牌定位、视觉规范、内容策略、推广计划的年度规划。1份方案书（50页）+季度执行计划，30个工作日交付。一级项目基础价10000元，含2次方案优化' },
+            { id: 41, name: '品牌VI规范', category: 'branding', price: 5000, description: 'Logo使用规范、字体规范、色值规范、版式模板、禁用规则。1套VI手册（PDF50页）+源文件（AI格式），20个工作日交付。一级项目基础价5000元，新增物料按500元/项计费' },
+            { id: 42, name: '宣传片制作', category: 'branding', price: 10000, description: '3分钟品牌故事片、1分钟产品功能片、30秒广告片，含脚本撰写、拍摄、剪辑、配音。3个视频文件（MP4格式）+原始素材，45个工作日交付。二级项目基础价10000元/分钟，拍摄场地另算' },
+            { id: 43, name: '企业形象展厅设计', category: 'branding', price: 10000, description: '展厅布局规划、视觉设计、物料制作、施工监理。1套设计方案+施工图纸，30个工作日交付。二级项目基础价10000元/㎡，面积不同价格另议' },
+            { id: 44, name: '品牌周边方案设计', category: 'branding', price: 3000, description: '请柬、贺卡、公仔、其他文创产品的设计及打样。1份设计方案+样品（3件），20个工作日交付。一级项目基础价3000元，生产费用另计' },
+            { id: 45, name: '请柬设计', category: 'branding', price: 500, description: '活动邀请函设计，含烫金/UV工艺，适配电子/印刷版本。AI/PSD源文件+PDF打印稿，5个工作日交付。二级项目基础价500元/款，印刷另加0.5元/份' },
+            { id: 46, name: '贺卡设计', category: 'branding', price: 500, description: '节日/客户答谢贺卡设计，含信封样式。3套设计方案+源文件，7个工作日交付。二级项目基础价500元/款，批量定制另议' },
+            { id: 47, name: '公仔设计', category: 'branding', price: 2500, description: '企业吉祥物3D建模、表情设计、应用场景展示（如盲盒/摆件）。STL模型文件+渲染图，15个工作日交付。二级项目基础价2500元，开模费用另计' },
+            { id: 48, name: '其他文创产品设计', category: 'branding', price: 2000, description: '工服、雨伞、工具箱等企业周边产品的外观设计。3套设计方案+尺寸图，10个工作日交付。二级项目基础价2000元/款，打样另加1000元/款' },
+            { id: 49, name: '品牌白皮书', category: 'branding', price: 5000, description: '品牌规划图、品牌发展史历程图、品牌理念体系。1份PDF白皮书（30页）+源文件，20个工作日交付。一级项目基础价5000元，含印刷版100份' },
+            { id: 50, name: '品牌规划图', category: 'branding', price: 1500, description: '时间轴形式展示品牌关键节点、重大事件、里程碑成就。AI/PNG格式，8个工作日交付。二级项目基础价1500元，内容超10个节点另加费' },
+            { id: 51, name: '品牌发展史历程图', category: 'branding', price: 800, description: '时间轴形式展示品牌关键节点、重大事件、里程碑成就。AI/PNG格式，8个工作日交付。二级项目基础价800元，内容超10个节点另加费' },
+            { id: 52, name: '品牌理念', category: 'branding', price: 2500, description: '使命愿景价值观的提炼及解读。1份理念手册（10页）+宣传海报，5个工作日交付。一级项目基础价2500元，含全员宣贯1次' },
+            { id: 53, name: '品牌文化建设方案', category: 'branding', price: 2000, description: '品牌故事的撰写、传播及文化落地活动策划。1份故事集+活动方案，15个工作日交付。一级项目基础价2000元，活动执行另计' },
+
+            // 活动策划与执行
+            { id: 54, name: '年度活动营销方案', category: 'activities', price: 12000, description: '展会、论坛、开放日、采访、直播等活动的规划及执行方案。1份年度活动日历+预算表，20个工作日交付。一级项目基础价12000元，单场执行另加5000元/场' },
+            { id: 55, name: '展会', category: 'activities', price: 10000, description: '展位设计、物料制作、人员培训、现场协调。1套执行手册+现场服务（3人/天），30个工作日交付。二级项目基础价10000元/场，场地费另计' },
+            { id: 56, name: '论坛', category: 'activities', price: 10000, description: '嘉宾邀请、议程设计、场地布置、直播对接。1份论坛方案+全程执行，45个工作日交付。二级项目基础价10000元/场，嘉宾费用另计' },
+            { id: 57, name: '开放日', category: 'activities', price: 1500, description: '流程设计、参观路线规划、讲解词撰写、物料准备。1份开放日方案+现场执行，20个工作日交付。二级项目基础价1500元/场，人数超100人另加费' },
+            { id: 58, name: '采访', category: 'activities', price: 1500, description: '采访提纲设计、发言人培训、场地布置、新闻通稿撰写。1份采访方案+通稿，15个工作日交付。二级项目基础价1500元/次，媒体车马费另计' },
+            { id: 59, name: '直播', category: 'activities', price: 5000, description: '直播策划、脚本撰写、场地布置、设备调试、现场执行、后期剪辑。1场直播+回放视频，10个工作日交付。二级项目基础价5000元/场，平台推广另计' },
+
+            // 客户关系维护
+            { id: 64, name: 'CRM系统规划方案', category: 'crm', price: 2000, description: '字段设计、权限配置、数据迁移方案、操作培训。1份配置文档+培训视频（30分钟），10个工作日交付。一级项目基础价2000元，系统采购另计' },
+            { id: 65, name: '粉丝数互动数询盘数统计', category: 'crm', price: 3000, description: '社交媒体粉丝增长、互动量、询盘量的日/周/月统计及趋势分析。1份数据报表+可视化图表，3个工作日交付。二级项目基础价3000元/月，多平台另加200元/个' },
+            { id: 66, name: '客户访谈视频和文章', category: 'crm', price: 3000, description: '潜在客户/老客户深度访谈，需求挖掘、满意度调查、改进建议收集。1份访谈纪要（脱敏）+分析报告，5个工作日交付/人。二级项目基础价3000元/人，超10人享折扣' },
+            { id: 67, name: '案例视频拍摄', category: 'crm', price: 500, description: '客户使用场景视频、testimonials采访、产品应用案例记录。1个3分钟视频+原始素材，15个工作日交付。二级项目基础价500元/个，差旅另计' },
+            { id: 68, name: '询盘信息回馈表', category: 'crm', price: 2000, description: '潜在客户信息整理、需求分类、跟进状态标注、销售对接。1份Excel清单+周更新，5个工作日交付。一级项目基础价2000元/月，含100条线索处理' },
+
+            // 跨部门协作与执行 - 销售
+            { id: 91, name: '名片', category: 'collaboration_sales', price: 500, description: '个人/公司名片设计，含信息排版、品牌元素应用。AI/PSD源文件+PDF打印稿，3个工作日交付。二级项目基础价500元/款，印刷另加0.5元/张' },
+            { id: 92, name: '纸质画册', category: 'collaboration_sales', price: 5000, description: '企业宣传册，20-30页，含内容排版、图片处理、印刷工艺建议。AI/PSD源文件+打样稿，15个工作日交付。二级项目基础价5000元/款，印刷另计' },
+            { id: 93, name: '单页', category: 'collaboration_sales', price: 800, description: '产品宣传单页、活动海报、易拉宝设计。AI/PSD源文件+PDF，5个工作日交付。二级项目基础价800元/款，尺寸超A3另加费' },
+            { id: 94, name: '合同', category: 'collaboration_sales', price: 500, description: '销售合同、服务协议、保密协议的模板设计及法律审核。Word模板+使用说明，10个工作日交付。二级项目基础价500元/套，法律审核另加1000元' },
+            { id: 95, name: '报价单', category: 'collaboration_sales', price: 500, description: '产品报价表、服务报价单的格式设计、自动计算功能。Excel模板（含公式），3个工作日交付。二级项目基础价500元/套，复杂计算另加费' },
+            { id: 96, name: 'ppt', category: 'collaboration_sales', price: 2000, description: '品牌风格PPT模板，含封面、目录、内容页、结束页等10种版式。PPTX模板文件，10个工作日交付。二级项目基础价2000元/套，图标库另加500元' },
+            { id: 97, name: '社交头像', category: 'collaboration_sales', price: 500, description: '个人/企业社交账号头像设计，适配不同平台尺寸。5个尺寸（PNG/透明背景），3个工作日交付。二级项目基础价500元/款，多平台另加200元' },
+            { id: 98, name: '电子画册', category: 'collaboration_sales', price: 2000, description: '可交互PDF画册、翻页效果、动画效果、多媒体嵌入。1份电子画册+源文件，20个工作日交付。二级项目基础价2000元/本，页数超20页另加费' },
+            { id: 99, name: '智能AI销售助手', category: 'collaboration_sales', price: 2000, description: '产品知识库搭建、问答话术撰写、客户画像标签体系。1份知识库文档+话术模板，30个工作日交付。二级项目基础价2000元/套，系统接入另加5000元' },
+            { id: 100, name: '详情页', category: 'collaboration_sales', price: 600, description: '电商平台产品详情页、官网产品介绍页设计及排版。PSD源文件+HTML代码，15个工作日交付。二级项目基础价600元/个，多平台适配另加费' },
+
+            // 跨部门协作与执行 - 人事
+            { id: 101, name: '荣誉证书', category: 'collaboration_hr', price: 500, description: '员工荣誉证书、奖状、奖杯奖牌设计。AI/PSD源文件+印刷稿，5个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 102, name: '员工礼品', category: 'collaboration_hr', price: 1500, description: '节日礼品、入职礼品、周年礼品的定制设计及采购建议。1份礼品方案+样品，15个工作日交付。二级项目基础价1500元/款，采购费用另计' },
+            { id: 103, name: '员工生日会', category: 'collaboration_hr', price: 800, description: '流程设计、场地布置、礼品准备、摄影记录。1份策划案+现场执行，7个工作日交付。二级项目基础价800元/场，人数超50人另加费' },
+            { id: 104, name: '团建活动策划', category: 'collaboration_hr', price: 1000, description: '活动方案设计、场地对接、物料准备、安全预案。1份活动方案+执行手册，10个工作日交付。二级项目基础价1000元/场，交通餐饮另计' },
+
+            // 跨部门协作与执行 - 研发
+            { id: 105, name: '产品白皮书', category: 'collaboration_rnd', price: 5000, description: '技术原理、功能特性、应用场景、技术参数的专业文档撰写。1份PDF白皮书（50页）+源文件，20个工作日交付。二级项目基础价5000元/份，图表另加200元/张' },
+            { id: 106, name: '视频手册', category: 'collaboration_rnd', price: 4000, description: '产品使用教程、安装指南、维护手册的视频拍摄及剪辑。1套视频（5-8个，共60分钟）+脚本，30个工作日交付。二级项目基础价4000元/小时，场地另计' },
+            { id: 107, name: '说明书', category: 'collaboration_rnd', price: 1000, description: '产品使用说明书、安装手册、保修卡的排版设计。AI/PSD源文件+PDF，10个工作日交付。二级项目基础价1000元/套，多语言另加300元/种' },
+            { id: 108, name: '保修卡', category: 'collaboration_rnd', price: 800, description: '产品保修条款、服务流程、联系方式的设计及印刷文件。AI/PSD源文件+PDF，5个工作日交付。二级项目基础价800元/款，印刷另计' },
+
+            // 跨部门协作与执行 - 计划
+            { id: 82, name: '蜜蜂跟单系统（从订单到交付）', category: 'collaboration_plan', price: 20000, description: '从订单到交付的全流程系统配置、字段自定义、流程设置。1份配置方案+培训，20个工作日交付。一级项目基础价20000元，系统采购另计' },
+
+            // 跨部门协作与执行 - 行政
+            { id: 109, name: '拱门', category: 'collaboration_admin', price: 500, description: '活动拱门、气球拱门的设计及制作文件。AI/PSD源文件+尺寸图，5个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 110, name: '工牌', category: 'collaboration_admin', price: 500, description: '员工工牌设计，含照片、姓名、职位、部门信息。AI/PSD源文件+印刷稿，5个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 111, name: '立牌', category: 'collaboration_admin', price: 500, description: '指示立牌、水牌、易拉宝设计。AI/PSD源文件+PDF，5个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 112, name: '文化墙', category: 'collaboration_admin', price: 500, description: '企业价值观墙、荣誉墙、员工风采墙的设计及安装方案。1套设计图+施工指南，15个工作日交付。二级项目基础价500元/面，制作另计' },
+            { id: 113, name: '工服', category: 'collaboration_admin', price: 500, description: '员工工作服、文化衫设计，含logo应用、款式建议。AI设计稿+面料推荐，10个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 114, name: '雨伞', category: 'collaboration_admin', price: 500, description: '定制雨伞设计，含logo位置、配色方案、工艺建议。AI设计稿+打样稿，10个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 115, name: '工具箱', category: 'collaboration_admin', price: 500, description: '定制工具箱外观设计，品牌元素应用。AI设计稿+尺寸图，10个工作日交付。二级项目基础价500元/款，制作另计' },
+            { id: 116, name: '条幅', category: 'collaboration_admin', price: 500, description: '活动条幅、背景墙条幅设计。AI/PSD源文件+尺寸图，3个工作日交付。二级项目基础价500元/条，制作另计' }
+        ];
+
+        // DOM 元素
+        const serviceGrid = document.getElementById('service-grid');
+        const selectedCount = document.getElementById('selected-count');
+        const totalPrice = document.getElementById('total-price');
+        const generateOrderBtn = document.getElementById('generate-order');
+        const orderModal = document.getElementById('order-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const orderDetails = document.getElementById('order-details');
+        const downloadOrderBtn = document.getElementById('download-order');
+        const confirmOrderBtn = document.getElementById('confirm-order');
+        const categoryButtons = document.querySelectorAll('[data-category]');
+
+        // 选择的服务
+        let selectedServices = [];
+
+        // 渲染服务列表
+        function renderServices(category = 'all') {
+            serviceGrid.innerHTML = '';
+
+            let filteredServices;
+            if (category === 'all') {
+                filteredServices = services;
+            } else if (category === 'collaboration') {
+                // 显示所有跨部门协作子分类的服务
+                filteredServices = services.filter(function(service) {
+                    return service.category.startsWith('collaboration_');
+                });
+            } else {
+                filteredServices = services.filter(function(service) {
+                    return service.category === category;
+                });
+            }
+
+            if (filteredServices.length === 0) {
+                serviceGrid.innerHTML = `
+                    <div class="col-span-full text-center py-10">
+                        <p class="text-gray-500">没有找到相关服务</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredServices.forEach(service => {
+                const isSelected = selectedServices.some(s => s.id === service.id);
+                const serviceCard = document.createElement('div');
+                serviceCard.className = `service-card ${isSelected ? 'service-card-selected' : ''}`;
+                serviceCard.dataset.id = service.id;
+
+                serviceCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-semibold text-lg">${service.name}</h3>
+                        <span class="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm font-medium">¥${service.price}</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">${service.description}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">点击选择</span>
+                        <i class="fa ${isSelected ? 'fa-check-circle text-primary' : 'fa-circle-o text-gray-300'}"></i>
+                    </div>
+                `;
+
+                serviceCard.addEventListener('click', () => toggleServiceSelection(service.id));
+                serviceGrid.appendChild(serviceCard);
+            });
+        }
+
+        // 切换服务选择状态
+        function toggleServiceSelection(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+
+            const index = selectedServices.findIndex(s => s.id === serviceId);
+            if (index === -1) {
+                selectedServices.push(service);
+            } else {
+                selectedServices.splice(index, 1);
+            }
+
+            updateSelectedServices();
+            renderServices(document.querySelector('.nav-link-active').dataset.category);
+        }
+
+        // 更新选择的服务数量和总价
+        function updateSelectedServices() {
+            selectedCount.textContent = selectedServices.length;
+            const total = selectedServices.reduce((sum, service) => sum + service.price, 0);
+            totalPrice.textContent = `¥${total}`;
+
+            generateOrderBtn.disabled = selectedServices.length === 0;
+        }
+
+        // 生成订单详情
+        function generateOrderDetails() {
+            if (selectedServices.length === 0) return;
+
+            let html = `
+                <table class="min-w-full divide-y divide-gray-200 mb-4">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">服务名称</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">单价</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+            `;
+
+            selectedServices.forEach(service => {
+                html += `
+                    <tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${service.name}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">¥${service.price}</td>
+                    </tr>
+                `;
+            });
+
+            const total = selectedServices.reduce((sum, service) => sum + service.price, 0);
+
+            html += `
+                    </tbody>
+                </table>
+                <div class="border-t border-gray-200 pt-4 flex justify-end">
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">总计</p>
+                        <p class="text-xl font-bold text-primary">¥${total}</p>
+                    </div>
+                </div>
+            `;
+
+            orderDetails.innerHTML = html;
+        }
+
+        // 下载订单文件
+        function downloadOrderFile() {
+            if (selectedServices.length === 0) return;
+
+            let content = '一人市场部服务订单\n\n';
+            content += '服务列表：\n';
+            selectedServices.forEach((service, index) => {
+                content += `${index + 1}. ${service.name} - ¥${service.price}\n`;
+            });
+            content += '\n';
+            content += `总计: ¥${selectedServices.reduce((sum, service) => sum + service.price, 0)}\n\n`;
+            content += '订单生成日期: ' + new Date().toLocaleString() + '\n';
+            content += '感谢您的选购！如有疑问，请联系市场部张经理：138-XXXX-XXXX';
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `市场服务订单_${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 事件监听
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                categoryButtons.forEach(btn => btn.classList.remove('nav-link-active'));
+                button.classList.add('nav-link-active');
+                renderServices(button.dataset.category);
             });
         });
+
+        generateOrderBtn.addEventListener('click', () => {
+            generateOrderDetails();
+            orderModal.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            orderModal.classList.add('hidden');
+        });
+
+        downloadOrderBtn.addEventListener('click', downloadOrderFile);
+
+        confirmOrderBtn.addEventListener('click', () => {
+            alert('订单已提交成功！我们将尽快与您联系。\n同时，订单文件已下载到您的设备。');
+            downloadOrderFile();
+            orderModal.classList.add('hidden');
+        });
+
+        // 点击模态框外部关闭
+        orderModal.addEventListener('click', (e) => {
+            if (e.target === orderModal) {
+                orderModal.classList.add('hidden');
+            }
+        });
+
+        // 初始化
+        renderServices();
     </script>
 </body>
 </html>
