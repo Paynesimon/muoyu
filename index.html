@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一起画鱼 · GM版</title>
+<style>
+html, body { height: 100%; margin: 0; background: #0b1020; }
+canvas { display:block; width:100%; height:100%; cursor: crosshair; }
+#gm-label { position: absolute; top: 10px; right: 10px; color: white; font-family: sans-serif; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<div id="gm-label">🐟 靠近我被吃</div>
+<canvas id="stage"></canvas>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+import { getDatabase, ref, push, onChildAdded, remove, set } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const REALTIME_ENABLED = !Object.values(firebaseConfig).join('').includes('YOUR_');
+let db;
+if (REALTIME_ENABLED) {
+  const app = initializeApp(firebaseConfig);
+  db = getDatabase(app);
+}
+
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+let W=0, H=0, dpr = window.devicePixelRatio || 1;
+function resize(){
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+const fishes = new Map();
+const room = 'global';
+const GM = { id: 'GM', x: 0.9, y: 0.1, size: 0.08 };
+
+if (REALTIME_ENABLED) {
+  const roomRef = ref(db, `fish/${room}`);
+  onChildAdded(roomRef, snap => {
+    const fish = snap.val();
+    if (!fish || fish.id === 'GM') return;
+    fish.key = snap.key;
+    fishes.set(fish.id, fish);
+  });
+}
+
+let drawing = false, path = [];
+canvas.addEventListener('pointerdown', e => {
+  drawing = true; path = [norm(e)];
+});
+canvas.addEventListener('pointermove', e => {
+  if (drawing) path.push(norm(e));
+});
+canvas.addEventListener('pointerup', e => {
+  if (!drawing) return; drawing = false;
+  if (path.length < 5) return;
+  const fish = createFish(path);
+  fishes.set(fish.id, fish);
+  if (REALTIME_ENABLED) {
+    const r = ref(db, `fish/${room}`);
+    set(push(r), fish);
+  }
+});
+
+function norm(e){
+  const rect = canvas.getBoundingClientRect();
+  return { x:(e.clientX - rect.left)/W, y:(e.clientY - rect.top)/H };
+}
+function denorm(p){ return { x: p.x*W, y: p.y*H }; }
+
+function createFish(path){
+  return {
+    id: crypto.randomUUID(),
+    path,
+    x: path[0].x,
+    y: path[0].y,
+    vx: Math.random()*0.02 - 0.01,
+    vy: Math.random()*0.02 - 0.01,
+    color: `hsl(${Math.random()*360},80%,60%)`,
+    size: 0.05,
+    shape: Math.floor(Math.random()*9)
+  };
+}
+
+function updateFish(fish, dt){
+  fish.x += fish.vx * dt;
+  fish.y += fish.vy * dt;
+  if (fish.x < 0 || fish.x > 1) fish.vx *= -1;
+  if (fish.y < 0 || fish.y > 1) fish.vy *= -1;
+}
+
+function drawFish(fish){
+  const p = denorm({x:fish.x,y:fish.y});
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(Math.atan2(fish.vy, fish.vx));
+  ctx.scale(fish.size*W/50, fish.size*W/50);
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = fish.color;
+  ctx.beginPath();
+  switch(fish.shape){
+    case 0: ctx.moveTo(-10,0); ctx.lineTo(0,-8); ctx.lineTo(10,0); ctx.lineTo(0,8); ctx.closePath(); break;
+    case 1: ctx.ellipse(0,0,12,6,0,0,Math.PI*2); break;
+    case 2: ctx.moveTo(-12,0); ctx.quadraticCurveTo(0,-8,12,0); ctx.quadraticCurveTo(0,8,-12,0); break;
+    case 3: ctx.moveTo(-14,0); ctx.lineTo(-7,-7); ctx.lineTo(7,-4); ctx.lineTo(14,0); ctx.lineTo(7,4); ctx.lineTo(-7,7); ctx.closePath(); break;
+    case 4: ctx.ellipse(0,0,10,8,0,0,Math.PI*2); break;
+    case 5: ctx.moveTo(-12,0); ctx.lineTo(0,-6); ctx.lineTo(12,0); ctx.lineTo(0,6); ctx.closePath(); break;
+    case 6: ctx.ellipse(0,0,14,5,0,0,Math.PI*2); break;
+    case 7: ctx.ellipse(0,0,8,8,0,0,Math.PI*2); break;
+    case 8: ctx.moveTo(-14,0); ctx.lineTo(-4,-8); ctx.lineTo(10,0); ctx.lineTo(-4,8); ctx.closePath(); break;
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+let last = performance.now();
+function loop(now){
+  const dt = (now - last)/1000; last = now;
+  ctx.clearRect(0,0,W,H);
+
+  // Draw GM
+  const gmPos = denorm(GM);
+  ctx.save();
+  ctx.translate(gmPos.x, gmPos.y);
+  ctx.fillStyle = 'gold';
+  ctx.beginPath();
+  ctx.ellipse(0,0,GM.size*W/2,GM.size*W/3,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  for (let [id, fish] of fishes){
+    updateFish(fish, dt);
+    drawFish(fish);
+    const dist = Math.hypot(fish.x - GM.x, fish.y - GM.y);
+    if (dist < GM.size + fish.size){
+      fishes.delete(id);
+      if (REALTIME_ENABLED && fish.key){
+        remove(ref(db, `fish/${room}/${fish.key}`));
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
